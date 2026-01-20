@@ -7,6 +7,7 @@ Local-first meeting transcription tooling for sensitive recordings. The current 
 - Python 3.10+
 - FFmpeg on PATH (used by pydub)
 - PortAudio system library (Linux only)
+- Optional: OpenVINO + pyannote dependencies for diarization
 
 ### Linux setup
 
@@ -30,6 +31,12 @@ python -m venv .venv
 
 On Windows, replace `.venv/bin/python` with `.venv\Scripts\python.exe`.
 
+### Diarization dependencies (optional)
+
+```bash
+.venv/bin/python -m pip install openvino>=2023.1.0 "librosa>=0.8.1" "matplotlib<3.8" "ruamel.yaml>=0.17.8,<0.17.29" --extra-index-url https://download.pytorch.org/whl/cpu torch torchvision torchaudio git+https://github.com/eaidova/pyannote-audio.git@hub0.10
+```
+
 ## Usage
 
 Record from the microphone and stop with Ctrl+C:
@@ -50,6 +57,14 @@ Split an existing WAV file:
 .venv/bin/python meeting_transcriber.py split recordings/latest.wav
 ```
 
+Run speaker diarization (downloads the model on first run and caches it under `models/pyannote`):
+
+```bash
+.venv/bin/python meeting_transcriber.py diarize recordings/latest.wav
+```
+
+If you use `pyannote/speaker-diarization`, you must accept the Hugging Face model license and provide a token via `HUGGINGFACE_HUB_TOKEN`.
+
 ## Defaults
 
 - Sample rate: 16 kHz, mono
@@ -63,4 +78,4 @@ Override with `--min-silence`, `--silence-thresh`, `--keep-silence`, or `--max-s
 ## Project status
 
 - Audio capture and segmentation is working.
-- Diarization + transcription are next; OpenVINO-backed diarization is planned.
+- Diarization is in progress (pyannote pipeline with OpenVINO segmentation).
