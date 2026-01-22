@@ -3,12 +3,7 @@
 Reference notes for working in this repo.
 
 ## Environment
-
-- Create venv: `python -m venv .venv`
-- Activate (Linux/macOS): `source .venv/bin/activate`
-- Activate (Windows): `.venv\Scripts\activate`
-- Install deps: `python -m pip install sounddevice soundfile pydub`
-
+- run `micromamba activate meeting` this should get you in the right venv. make sure commands ran only in that venv
 ## System packages
 
 - Linux: `sudo apt-get install -y portaudio19-dev ffmpeg`

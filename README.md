@@ -22,38 +22,38 @@ sudo apt-get install -y portaudio19-dev ffmpeg
 
 ## Install
 
+in the right venv
+
 ```bash
-python -m venv .venv
-.venv/bin/python -m pip install --upgrade pip
-.venv/bin/python -m pip install sounddevice soundfile pydub
+pip install -r requirments.txt
 ```
 
-On Windows, replace `.venv/bin/python` with `.venv\Scripts\python.exe`.
+On Windows, replace `python` with `.venv\Scripts\python.exe`.
 
 ## Usage
 
 Record from microphone and stop with Ctrl+C:
 
 ```bash
-.venv/bin/python meeting_transcriber.py record --split
+python meeting_transcriber.py record --split
 ```
 
 Record for a fixed duration (seconds) and split:
 
 ```bash
-.venv/bin/python meeting_transcriber.py record --duration 120 --split
+python meeting_transcriber.py record --duration 120 --split
 ```
 
 Split an existing WAV file:
 
 ```bash
-.venv/bin/python meeting_transcriber.py split recordings/latest.wav
+python meeting_transcriber.py split recordings/latest.wav
 ```
 
 Run speaker diarization:
 
 ```bash
-.venv/bin/python meeting_transcriber.py diarize recordings/latest.wav
+python meeting_transcriber.py diarize recordings/latest.wav
 ```
 
 ## Defaults
