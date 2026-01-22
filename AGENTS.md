@@ -32,6 +32,8 @@ python meeting_transcriber.py split recordings/latest.wav
 - Add pytest + a synthetic alignment test for transcript + diarization merge logic.
 - Document diarization setup steps in README (model download/conversion, OpenVINO deps).
 
+- NEVER use importlib instead everything should import globally and if it doesnt exist in the venv thats a bug
+
 ## Notes
 
 - Keep output audio in `recordings/` and `segments/`.

@@ -1,9 +1,13 @@
 import argparse
 import json
+import numpy
+import openvino
 import os
 import pathlib
+import pyannote.audio
 import queue
 import sys
+import torch
 from typing import Any, List, Optional
 
 import sounddevice as sd
@@ -138,17 +142,12 @@ def _configure_hf_cache(cache_dir: pathlib.Path) -> pathlib.Path:
 def _prepare_openvino_segmentation(
     pipeline, model_id: str, cache_dir: pathlib.Path, device: str
 ) -> None:
-    import importlib
-
-    np = importlib.import_module("numpy")
-    ov = importlib.import_module("openvino")
-    torch = importlib.import_module("torch")
 
     model_slug = _sanitize_model_id(model_id)
     ov_model_path = cache_dir / f"{model_slug}_segmentation.xml"
     onnx_path = ov_model_path.with_suffix(".onnx")
 
-    core = ov.Core()
+    core = openvino.Core()
 
     if not ov_model_path.exists():
         torch.onnx.export(
@@ -159,8 +158,8 @@ def _prepare_openvino_segmentation(
             output_names=["outputs"],
             dynamic_axes={"chunks": {0: "batch_size", 2: "wave_len"}},
         )
-        ov_model = ov.convert_model(onnx_path)
-        ov.save_model(ov_model, str(ov_model_path))
+        ov_model = openvino.convert_model(onnx_path)
+        openvino.save_model(ov_model, str(ov_model_path))
     else:
         ov_model = core.read_model(ov_model_path)
 
@@ -172,7 +171,7 @@ def _prepare_openvino_segmentation(
         if hasattr(chunks, "detach"):
             data = chunks.detach().cpu().numpy()
         else:
-            data = np.asarray(chunks)
+            data = numpy.asarray(chunks)
         result = compiled_model({input_port: data})
         return result[output_port]
 
@@ -188,10 +187,7 @@ def diarize_audio(
     _ensure_directory(cache_dir)
     _configure_hf_cache(cache_dir)
 
-    import importlib
-
-    pyannote_audio = importlib.import_module("pyannote.audio")
-    pipeline = pyannote_audio.Pipeline.from_pretrained(model_id)
+    pipeline = pyannote.audio.Pipeline.from_pretrained(model_id)
     _prepare_openvino_segmentation(pipeline, model_id, cache_dir, device)
 
     diarization = pipeline({"uri": input_path.stem, "audio": str(input_path)})

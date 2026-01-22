@@ -9,6 +9,16 @@ __pycache__/
 # Local model cache
 models/
 
+# Audio files and test data
+*.wav
+*.mp3
+*.flac
+*.ogg
+test_data/
+recordings/
+segments/
+tests/fixtures/generated/
+
 # Distribution / packaging
 .Python
 build/
@@ -208,3 +218,6 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+yo_ng_female.zip
+yo_ng_male.zip

@@ -1,0 +1,8 @@
+sounddevice
+soundfile
+pydub
+numpy
+torch
+openvino
+pyannote.audio
+pytest

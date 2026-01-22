@@ -1,13 +1,12 @@
 # meeting-transcriber
 
-Local-first meeting transcription tooling for sensitive recordings. The current CLI records audio from a microphone, splits it into segments based on silence or a maximum length, and prepares the audio for downstream transcription and diarization workflows.
+Local-first meeting transcription tooling for sensitive recordings. The current CLI records audio from a microphone, splits it into segments based on silence or a maximum length, and prepares audio for downstream transcription and diarization workflows.
 
 ## Requirements
 
 - Python 3.10+
 - FFmpeg on PATH (used by pydub)
 - PortAudio system library (Linux only)
-- Optional: OpenVINO + pyannote dependencies for diarization
 
 ### Linux setup
 
@@ -31,15 +30,9 @@ python -m venv .venv
 
 On Windows, replace `.venv/bin/python` with `.venv\Scripts\python.exe`.
 
-### Diarization dependencies (optional)
-
-```bash
-.venv/bin/python -m pip install openvino>=2023.1.0 "librosa>=0.8.1" "matplotlib<3.8" "ruamel.yaml>=0.17.8,<0.17.29" --extra-index-url https://download.pytorch.org/whl/cpu torch torchvision torchaudio git+https://github.com/eaidova/pyannote-audio.git@hub0.10
-```
-
 ## Usage
 
-Record from the microphone and stop with Ctrl+C:
+Record from microphone and stop with Ctrl+C:
 
 ```bash
 .venv/bin/python meeting_transcriber.py record --split
@@ -57,13 +50,11 @@ Split an existing WAV file:
 .venv/bin/python meeting_transcriber.py split recordings/latest.wav
 ```
 
-Run speaker diarization (downloads the model on first run and caches it under `models/pyannote`):
+Run speaker diarization:
 
 ```bash
 .venv/bin/python meeting_transcriber.py diarize recordings/latest.wav
 ```
-
-If you use `pyannote/speaker-diarization`, you must accept the Hugging Face model license and provide a token via `HUGGINGFACE_HUB_TOKEN`.
 
 ## Defaults
 
@@ -77,5 +68,11 @@ Override with `--min-silence`, `--silence-thresh`, `--keep-silence`, or `--max-s
 
 ## Project status
 
-- Audio capture and segmentation is working.
-- Diarization is in progress (pyannote pipeline with OpenVINO segmentation).
+- ✅ Audio capture and segmentation working
+- ✅ OpenVINO-optimized speaker diarization 
+- 🔄 Transcription integration next
+- 📋 Test data included (see `test_data/`)
+
+## Test Data
+
+Small sample of Yoruba speech data included in `test_data/yoruba_samples/` for testing diarization and transcription algorithms. See `test_data/README.md` for details.
